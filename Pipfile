@@ -6,8 +6,10 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
+rope = "*"
 
 [packages]
+pygame = "*"
 
 [requires]
 python_version = "3.6"
