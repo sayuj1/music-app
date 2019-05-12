@@ -48,12 +48,35 @@ root.iconbitmap(r'melody.ico')
 filelabel = Label(root, text='Listen Your Favorites Songs')
 filelabel.pack()
 
+statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
+statusbar.pack(side=BOTTOM, fill=X)
 
+############################Left Frame ####################################
+leftFrame = Frame(root)
+leftFrame.pack(side=LEFT,padx=30)
 
-lengthlabel = Label(root, text='Total Length  --:--')
+#Songs playlist
+Lb1 = Listbox(leftFrame)
+Lb1.insert(0, 'song')
+Lb1.insert(1, 'song')
+Lb1.pack()
+
+btn1 = Button(leftFrame, text="+ Add")
+btn1.pack(side=LEFT)
+
+btn2 = Button(leftFrame, text="- Delete")
+btn2.pack(side=LEFT)
+
+##########################################################################
+
+##############################Right Frame ################################
+rightFrame = Frame(root)
+rightFrame.pack()
+
+lengthlabel = Label(rightFrame, text='Total Length  --:--')
 lengthlabel.pack(pady=5)
 
-Currentlabel = Label(root, text='Current Length  --:--', relief = GROOVE)
+Currentlabel = Label(rightFrame, text='Current Length  --:--', relief = GROOVE)
 Currentlabel.pack()
 
 
@@ -172,8 +195,6 @@ def music_rewind():
 
 
 muted = FALSE
-
-
 def mute_music():
     global muted
     if muted:  # unmute the music
@@ -190,7 +211,7 @@ def mute_music():
 
 
 #####################################################middle frame containing buttons ##############################################################
-mframe = Frame(root, relief=RAISED)
+mframe = Frame(rightFrame, relief=RAISED)
 mframe.pack(padx=30, pady=30)
 
 # play button
@@ -211,7 +232,7 @@ pauseBtn.grid(row=0, column=1, padx=10)
 ################################## Middle Frame End ##################################
 
 ################################## Bottom Frame Frame ##################################
-bottomFrame = Frame(root)
+bottomFrame = Frame(rightFrame)
 bottomFrame.pack(pady=15)
 
 # rewind button
@@ -232,9 +253,6 @@ mixer.music.set_volume(0.2)  # setting default volume
 scale.grid(row=0, column=2, padx=30)
 
 ################################## Bottom Frame End ##################################
-
-statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
-statusbar.pack(side=BOTTOM, fill=X)
 
 def on_closing():    
     mixer.music.stop() #for stopping music before exiting to avoid the main thread error
