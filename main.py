@@ -133,17 +133,17 @@ mframe = Frame(root, relief = RAISED)
 mframe.pack(padx=30, pady=30)
 
 # play button
-play_photo = PhotoImage(file='play.png')
+play_photo = PhotoImage(file='images/play.png')
 playBtn = Button(mframe, image=play_photo, command=play_music)
 playBtn.grid(row=0, column=0, padx=10)              #pack(side=LEFT, padx=10)
 
 # stop button
-stop_photo = PhotoImage(file='stop.png')
+stop_photo = PhotoImage(file='images/stop.png')
 stopBtn = Button(mframe, image=stop_photo, command=stop_music)
 stopBtn.grid(row=0, column=2, padx=10)
 
 #pause button
-pause_photo = PhotoImage(file='pause.png')
+pause_photo = PhotoImage(file='images/pause.png')
 pauseBtn = Button(mframe, image=pause_photo, command = pause_music)
 pauseBtn.grid(row=0, column=1, padx=10)
 
@@ -154,12 +154,12 @@ bottomFrame = Frame(root)
 bottomFrame.pack(pady=15)
 
 #rewind button
-rewind_photo = PhotoImage(file='previous.png')
+rewind_photo = PhotoImage(file='images/previous.png')
 rewindBtn = Button(bottomFrame, image=rewind_photo, command = music_rewind)
 rewindBtn.grid(row = 0, column = 0)
 
-volume_photo = PhotoImage(file='volume.png')
-mute_photo = PhotoImage(file='mute.png')
+volume_photo = PhotoImage(file='images/volume.png')
+mute_photo = PhotoImage(file='images/mute.png')
 volumeBtn = Button(bottomFrame, image=volume_photo, command = mute_music)
 volumeBtn.grid(row = 0, column = 1)
 
