@@ -17,6 +17,7 @@ subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 def open_file():
     global filename
     filename = fs.askopenfilename()
+    statusbar['text'] = os.path.basename(filename) + " Loaded"
     # print(filename)
 
 
@@ -38,12 +39,12 @@ subMenu.add_command(label="About Us", command=about_us)
 # root.resizable(False, False)
 mixer.init()  # initializing the mixer
 
-root.geometry('500x500')
+# root.geometry('500x500')
 
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
 text = Label(root, text='Lets make some noise')
-text.pack()
+text.pack(pady=10)
 
 # set volume
 
@@ -73,12 +74,12 @@ def play_music():
             music_stopped
         except:
             mixer.music.unpause()
-            statusbar['text'] = "Music Resumed"
+            statusbar['text'] = "Music Resumed : " + os.path.basename(filename)
         else:
             # print(music_stopped)
             if(music_stopped==0):
                 mixer.music.unpause()
-                statusbar['text'] = "Music Resumed"
+                statusbar['text'] = "Music Resumed : " + os.path.basename(filename)
             else:
                 mixer.music.play()
                 statusbar['text'] = "Playing Music : " + " " + os.path.basename(filename)
@@ -91,8 +92,9 @@ def stop_music():
         mb.showerror('', 'No Music File Found')
     else:
        mixer.music.stop()
-       statusbar['text'] = "Music Stopped"
+       statusbar['text'] = "Music Stopped : " + os.path.basename(filename)
        globals()['music_stopped'] = TRUE
+       globals()['music_paused'] = FALSE
 
 def pause_music():
     try:
@@ -100,32 +102,35 @@ def pause_music():
     except:
         mb.showerror('', 'No Music File Found')
     else:
-        global paused
-        paused = TRUE
+        globals()['paused'] = TRUE
         mixer.music.pause()
-        statusbar['text'] = "Music Paused"
+        statusbar['text'] = "Music Paused : " + os.path.basename(filename)
         globals()['music_stopped'] = FALSE
+
+#middle frame containing buttons
+mframe = Frame(root, relief = RAISED)
+mframe.pack(padx=10, pady=10)
 
 # play button
 play_photo = PhotoImage(file='play.png')
-playBtn = Button(root, image=play_photo, command=play_music)
-playBtn.pack()
+playBtn = Button(mframe, image=play_photo, command=play_music)
+playBtn.pack(side=LEFT, padx=10)
 
 # stop button
 stop_photo = PhotoImage(file='stop.png')
-stopBtn = Button(root, image=stop_photo, command=stop_music)
-stopBtn.pack()
+stopBtn = Button(mframe, image=stop_photo, command=stop_music)
+stopBtn.pack(side=LEFT, padx=10)
 
 #pause button
 pause_photo = PhotoImage(file='pause.png')
-pauseBtn = Button(root, image=pause_photo, command = pause_music)
-pauseBtn.pack()
+pauseBtn = Button(mframe, image=pause_photo, command = pause_music)
+pauseBtn.pack(side=LEFT, padx=10)
 
 # volume Control
 scale = Scale(root, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
 scale.set(20)
 mixer.music.set_volume(0.2)  # setting default volume
-scale.pack()
+scale.pack(pady=15)
 
 statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
 statusbar.pack(side=BOTTOM, fill=X)
