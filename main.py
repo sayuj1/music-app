@@ -44,8 +44,11 @@ mixer.init()  # initializing the mixer
 
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
+
 filelabel = Label(root, text='Listen Your Favorites Songs')
 filelabel.pack()
+
+
 
 lengthlabel = Label(root, text='Total Length  --:--')
 lengthlabel.pack(pady=5)
@@ -162,6 +165,8 @@ def pause_music():
 
 
 def music_rewind():
+    stop_music()
+    time.sleep(1) 
     play_music()
     statusbar['text'] = "Music Restarted : " + os.path.basename(filename)
 
