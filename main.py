@@ -17,19 +17,24 @@ root = Tk()
 menubar = Menu(root)
 root.config(menu=menubar)
 
-def open_file():
-    global filename
-    filename = fs.askopenfilename()
-    statusbar['text'] = os.path.basename(filename) + " Loaded"
-    add_to_playList(filename)
-    # print(filename)
+# playList --> fullpath + filename 
+# playListBox --> filename
 
-def add_to_playList(f):
+playList = []
+
+def open_file():
+    global filename_path
+    filename_path = fs.askopenfilename()
+    statusbar['text'] = os.path.basename(filename_path) + " Loaded"
+    add_to_playList(filename_path)
+    # print(filename_path)
+
+def add_to_playList(filename):
     #Songs playlist
-    f=os.path.basename(f)
+    filename=os.path.basename(filename)
     index = 0
-    playList.insert(index, f)
-    playList.pack()
+    playListBox.insert(index, filename)
+    playList.insert(index, filename_path)
     index+=1
 
 
@@ -69,8 +74,8 @@ statusbar.pack(side=BOTTOM, fill=X)
 leftFrame = Frame(root)
 leftFrame.pack(side=LEFT,padx=30)
 
-playList = Listbox(leftFrame)
-playList.pack()
+playListBox = Listbox(leftFrame)
+playListBox.pack()
 
 addBtn = Button(leftFrame, text="+ Add", command=open_file)
 addBtn.pack(side=LEFT)
@@ -113,16 +118,16 @@ def start_count(t):
 
 
 #show details
-def show_details():
-    filelabel['text'] = "Playing " + " - " + os.path.basename(filename)  # printing loaded filename
+def show_details(play_song):
+    filelabel['text'] = "Playing " + " - " + os.path.basename(play_song)  # printing loaded play_song
     
-    file_data = os.path.splitext(filename)
+    file_data = os.path.splitext(play_song)
 
     if file_data[1] == '.mp3':
-        audio = MP3(filename)
+        audio = MP3(play_song)
         total_length = audio.info.length
     else:
-        a = mixer.Sound(filename)
+        a = mixer.Sound(play_song)
         total_length = a.get_length()
     
     #divmod - total_length//60, total_length%60
@@ -136,17 +141,25 @@ def show_details():
     t1.start()
     # start_count(total_length)
 
+playSong = ''
+
 def play_music():
     try:
         paused  # checking if pause variable is initialized or not
     except:
         try:
-            mixer.music.load(filename)
+            mixer.music.stop()
+            time.sleep(1)
+            selectedSong = playListBox.curselection() #getting selected song from the listBox
+            selectedSong = int(selectedSong[0])
+            globals()['playSong'] = playList[selectedSong]
+            # mixer.music.load(filename_path)
+            mixer.music.load(playSong)
             mixer.music.play()
-            statusbar['text'] = "Playing Music : " + " " + \
-                os.path.basename(filename)  # printing loaded filename
+            # statusbar['text'] = "Playing Music : " + " " +  os.path.basename(filename_path)  # printing loaded filename_path
+            statusbar['text'] = "Playing Music : " + " " +  os.path.basename(playSong)
             globals()['music_loaded'] = TRUE
-            show_details()
+            show_details(playSong)
 
         except:
             mb.showerror('No File', 'No File Choosen')
@@ -155,7 +168,7 @@ def play_music():
             music_stopped
         except:
             mixer.music.unpause()
-            statusbar['text'] = "Music Resumed : " + os.path.basename(filename)
+            statusbar['text'] = "Music Resumed : " + os.path.basename(playSong)
         else:
             # print(music_stopped)
             if(music_stopped == 0):
@@ -163,12 +176,12 @@ def play_music():
                 global pause
                 pause = FALSE
                 statusbar['text'] = "Music Resumed : " + \
-                    os.path.basename(filename)
+                    os.path.basename(playSong)
             else:
                 mixer.music.play()
                 statusbar['text'] = "Playing Music : " + \
-                    " " + os.path.basename(filename)
-                show_details()
+                    " " + os.path.basename(playSong)
+                show_details(playSong)
 
 # stop music
 
@@ -179,7 +192,7 @@ def stop_music():
         mb.showerror('', 'No Music File Found')
     else:
         mixer.music.stop()
-        statusbar['text'] = "Music Stopped : " + os.path.basename(filename)
+        statusbar['text'] = "Music Stopped : " + os.path.basename(playSong)
         globals()['music_stopped'] = TRUE
         globals()['music_paused'] = FALSE
 
@@ -194,7 +207,7 @@ def pause_music():
         global pause
         pause = TRUE
         mixer.music.pause()
-        statusbar['text'] = "Music Paused : " + os.path.basename(filename)
+        statusbar['text'] = "Music Paused : " + os.path.basename(playSong)
         globals()['music_stopped'] = FALSE
 
 
@@ -202,7 +215,7 @@ def music_rewind():
     stop_music()
     time.sleep(1) 
     play_music()
-    statusbar['text'] = "Music Restarted : " + os.path.basename(filename)
+    statusbar['text'] = "Music Restarted : " + os.path.basename(playSong)
 
 
 muted = FALSE
