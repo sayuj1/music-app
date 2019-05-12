@@ -107,30 +107,45 @@ def pause_music():
         statusbar['text'] = "Music Paused : " + os.path.basename(filename)
         globals()['music_stopped'] = FALSE
 
-#middle frame containing buttons
+def music_rewind():
+    play_music()
+    statusbar['text'] = "Music Restarted : " + os.path.basename(filename)
+
+#####################################################middle frame containing buttons ##############################################################
 mframe = Frame(root, relief = RAISED)
-mframe.pack(padx=10, pady=10)
+mframe.pack(padx=30, pady=30)
 
 # play button
 play_photo = PhotoImage(file='play.png')
 playBtn = Button(mframe, image=play_photo, command=play_music)
-playBtn.pack(side=LEFT, padx=10)
+playBtn.grid(row=0, column=0, padx=10)              #pack(side=LEFT, padx=10)
 
 # stop button
 stop_photo = PhotoImage(file='stop.png')
 stopBtn = Button(mframe, image=stop_photo, command=stop_music)
-stopBtn.pack(side=LEFT, padx=10)
+stopBtn.grid(row=0, column=2, padx=10)
 
 #pause button
 pause_photo = PhotoImage(file='pause.png')
 pauseBtn = Button(mframe, image=pause_photo, command = pause_music)
-pauseBtn.pack(side=LEFT, padx=10)
+pauseBtn.grid(row=0, column=1, padx=10)
+
+################################## Middle Frame ##################################
+
+bottomFrame = Frame(root)
+bottomFrame.pack(pady=15)
+
+#rewind button
+rewind_photo = PhotoImage(file='previous.png')
+rewindBtn = Button(bottomFrame, image=rewind_photo, command = music_rewind)
+rewindBtn.grid(row = 0, column = 0)
+
 
 # volume Control
-scale = Scale(root, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
+scale = Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
 scale.set(20)
 mixer.music.set_volume(0.2)  # setting default volume
-scale.pack(pady=15)
+scale.grid(row = 0, column = 1, padx=30)
 
 statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
 statusbar.pack(side=BOTTOM, fill=X)
