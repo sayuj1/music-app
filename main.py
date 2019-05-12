@@ -9,6 +9,10 @@ import threading
 
 root = Tk()
 
+# Root Window = filelabel, statusbar
+# Left Frame = ListBox(Playlist)
+# Right Frame = total_time, current_time, play,stop,pause buttons, volume slider, mute, restart button
+
 # create the menubar
 menubar = Menu(root)
 root.config(menu=menubar)
@@ -17,7 +21,17 @@ def open_file():
     global filename
     filename = fs.askopenfilename()
     statusbar['text'] = os.path.basename(filename) + " Loaded"
+    add_to_playList(filename)
     # print(filename)
+
+def add_to_playList(f):
+    #Songs playlist
+    f=os.path.basename(f)
+    index = 0
+    playList.insert(index, f)
+    playList.pack()
+    index+=1
+
 
 def about_us():
     mb.showinfo('About Melody',
@@ -55,17 +69,14 @@ statusbar.pack(side=BOTTOM, fill=X)
 leftFrame = Frame(root)
 leftFrame.pack(side=LEFT,padx=30)
 
-#Songs playlist
-Lb1 = Listbox(leftFrame)
-Lb1.insert(0, 'song')
-Lb1.insert(1, 'song')
-Lb1.pack()
+playList = Listbox(leftFrame)
+playList.pack()
 
-btn1 = Button(leftFrame, text="+ Add")
-btn1.pack(side=LEFT)
+addBtn = Button(leftFrame, text="+ Add", command=open_file)
+addBtn.pack(side=LEFT)
 
-btn2 = Button(leftFrame, text="- Delete")
-btn2.pack(side=LEFT)
+delBtn = Button(leftFrame, text="- Delete")
+delBtn.pack(side=LEFT)
 
 ##########################################################################
 
