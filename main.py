@@ -111,6 +111,23 @@ def music_rewind():
     play_music()
     statusbar['text'] = "Music Restarted : " + os.path.basename(filename)
 
+muted = FALSE
+
+def mute_music():
+    global muted
+    if muted:  #unmute the music
+        mixer.music.set_volume(0)
+        scale.set(20)
+        volumeBtn['image']=volume_photo
+        muted=FALSE
+        # volumeBtn.configure(image=mute_photo)
+    else:  #mute the music
+        mixer.music.set_volume(0)
+        scale.set(0)
+        volumeBtn['image']=mute_photo
+        muted = TRUE
+
+
 #####################################################middle frame containing buttons ##############################################################
 mframe = Frame(root, relief = RAISED)
 mframe.pack(padx=30, pady=30)
@@ -130,8 +147,9 @@ pause_photo = PhotoImage(file='pause.png')
 pauseBtn = Button(mframe, image=pause_photo, command = pause_music)
 pauseBtn.grid(row=0, column=1, padx=10)
 
-################################## Middle Frame ##################################
+################################## Middle Frame End ##################################
 
+################################## Bottom Frame Frame ##################################
 bottomFrame = Frame(root)
 bottomFrame.pack(pady=15)
 
@@ -140,12 +158,19 @@ rewind_photo = PhotoImage(file='previous.png')
 rewindBtn = Button(bottomFrame, image=rewind_photo, command = music_rewind)
 rewindBtn.grid(row = 0, column = 0)
 
+volume_photo = PhotoImage(file='volume.png')
+mute_photo = PhotoImage(file='mute.png')
+volumeBtn = Button(bottomFrame, image=volume_photo, command = mute_music)
+volumeBtn.grid(row = 0, column = 1)
+
 
 # volume Control
 scale = Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
-scale.set(20)
+scale.set(20)  #setting default value of the scale
 mixer.music.set_volume(0.2)  # setting default volume
-scale.grid(row = 0, column = 1, padx=30)
+scale.grid(row = 0, column = 2, padx=30)
+
+################################## Bottom Frame End ##################################
 
 statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
 statusbar.pack(side=BOTTOM, fill=X)
