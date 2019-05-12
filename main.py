@@ -56,21 +56,55 @@ def set_vol(val):
 
 
 def play_music():
+    #
     try:
-        mixer.music.load(filename)
-        mixer.music.play()
-        statusbar['text'] = "Playing Music : "+ " "+ os.path.basename(filename)
-
+        paused  #checking if pause variable is initialized or not
     except:
-        mb.showerror('No File', 'No File Choosen')
+        try:
+            mixer.music.load(filename)
+            mixer.music.play()
+            statusbar['text'] = "Playing Music : " + " " + os.path.basename(filename)  # printing loaded filename
+            globals()['music_loaded'] = TRUE
+
+        except:
+            mb.showerror('No File', 'No File Choosen')
+    else: #this block will execute if try block executed successfully
+        try:
+            music_stopped
+        except:
+            mixer.music.unpause()
+            statusbar['text'] = "Music Resumed"
+        else:
+            # print(music_stopped)
+            if(music_stopped==0):
+                mixer.music.unpause()
+                statusbar['text'] = "Music Resumed"
+            else:
+                mixer.music.play()
+                statusbar['text'] = "Playing Music : " + " " + os.path.basename(filename)
 
 # stop music
-
-
 def stop_music():
-    mixer.music.stop()
-    statusbar['text'] = "Music Stopped"
+    try:
+        music_loaded
+    except:
+        mb.showerror('', 'No Music File Found')
+    else:
+       mixer.music.stop()
+       statusbar['text'] = "Music Stopped"
+       globals()['music_stopped'] = TRUE
 
+def pause_music():
+    try:
+        music_loaded
+    except:
+        mb.showerror('', 'No Music File Found')
+    else:
+        global paused
+        paused = TRUE
+        mixer.music.pause()
+        statusbar['text'] = "Music Paused"
+        globals()['music_stopped'] = FALSE
 
 # play button
 play_photo = PhotoImage(file='play.png')
@@ -82,13 +116,18 @@ stop_photo = PhotoImage(file='stop.png')
 stopBtn = Button(root, image=stop_photo, command=stop_music)
 stopBtn.pack()
 
+#pause button
+pause_photo = PhotoImage(file='pause.png')
+pauseBtn = Button(root, image=pause_photo, command = pause_music)
+pauseBtn.pack()
+
 # volume Control
 scale = Scale(root, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
 scale.set(20)
 mixer.music.set_volume(0.2)  # setting default volume
 scale.pack()
 
-statusbar = Label(root, text='Welcome to Music App', relief = SUNKEN, anchor=W)
-statusbar.pack(side = BOTTOM, fill = X)
+statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
+statusbar.pack(side=BOTTOM, fill=X)
 
 root.mainloop()
