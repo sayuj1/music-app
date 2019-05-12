@@ -1,6 +1,7 @@
 import os
 from tkinter import *
 from tkinter import ttk  #for theme widgets
+from ttkthemes import themed_tk as tk
 import tkinter.messagebox as mb
 import tkinter.filedialog as fs
 from mutagen.mp3 import MP3  #for getting metadata from the file bcz in pygame mixer it does not work for mp3 file due to large size
@@ -8,7 +9,10 @@ from pygame import mixer
 import time
 import threading
 
-root = Tk()
+# root = Tk()
+root = tk.ThemedTk()  #creating theme widget object
+root.get_themes()
+root.set_theme('radiance')
 
 # Root Window = filelabel, statusbar
 # Left Frame = ListBox(Playlist)
@@ -76,7 +80,7 @@ statusbar.pack(side=BOTTOM, fill=X)
 
 ############################Left Frame ####################################
 leftFrame = Frame(root)
-leftFrame.pack(side=LEFT,padx=30)
+leftFrame.pack(side=LEFT,padx=30, pady=30)
 
 playListBox = Listbox(leftFrame)
 playListBox.pack()
@@ -97,7 +101,7 @@ delBtn.pack(side=LEFT)
 
 ##############################Right Frame ################################
 rightFrame = Frame(root)
-rightFrame.pack()
+rightFrame.pack(pady=30)
 
 lengthlabel = ttk.Label(rightFrame, text='Total Length  --:--')
 lengthlabel.pack(pady=5)
