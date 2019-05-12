@@ -4,6 +4,8 @@ import tkinter.messagebox as mb
 import tkinter.filedialog as fs
 from mutagen.mp3 import MP3  #for getting metadata from the file bcz in pygame mixer it does not work for mp3 file due to large size
 from pygame import mixer
+import time
+import threading
 
 root = Tk()
 
@@ -11,27 +13,25 @@ root = Tk()
 menubar = Menu(root)
 root.config(menu=menubar)
 
-# create the submenu
-subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
-
-
 def open_file():
     global filename
     filename = fs.askopenfilename()
     statusbar['text'] = os.path.basename(filename) + " Loaded"
     # print(filename)
 
+def about_us():
+    mb.showinfo('About Melody',
+                'The is the music listening app created by Sayuj')
+
+
+
+# create the submenu
+subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 
 menubar.add_cascade(label="File", menu=subMenu)
 subMenu.add_command(label="Open", command=open_file)
 subMenu.add_separator()
 subMenu.add_command(label="Exit", command=root.destroy)
-
-
-def about_us():
-    mb.showinfo('About Melody',
-                'The is the music listening app created by Sayuj')
-
 
 subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="Help", menu=subMenu)
@@ -45,18 +45,35 @@ mixer.init()  # initializing the mixer
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
 filelabel = Label(root, text='Listen Your Favorites Songs')
-filelabel.pack(pady=10)
+filelabel.pack()
 
 lengthlabel = Label(root, text='Total Length  --:--')
-lengthlabel.pack(pady=10)
+lengthlabel.pack(pady=5)
+
+Currentlabel = Label(root, text='Current Length  --:--', relief = GROOVE)
+Currentlabel.pack()
 
 
 # set volume
-
-
 def set_vol(val):
     volume = int(val)/100
     mixer.music.set_volume(volume)
+
+def start_count(t):
+    global pause
+    current_time = 0
+    while current_time<=t and mixer.music.get_busy():  # if mixer get stop it returns false
+        if pause:
+            continue
+        else:
+            mins, secs = divmod(current_time, 60)
+            mins = round(mins)
+            secs = round(secs)
+            timeformat = '{:02d}:{:02d}'.format(mins, secs)
+            Currentlabel['text'] = 'Current Length '+ timeformat
+            time.sleep(1) #value is in second
+            current_time = current_time+1
+
 
 #show details
 def show_details():
@@ -77,6 +94,10 @@ def show_details():
     secs = round(secs)
     timeformat = '{:02d}:{:02d}'.format(mins, secs)
     lengthlabel['text'] = 'Total Length '+ timeformat
+
+    t1 = threading.Thread(target=start_count, args=(total_length,))
+    t1.start()
+    # start_count(total_length)
 
 def play_music():
     try:
@@ -102,6 +123,8 @@ def play_music():
             # print(music_stopped)
             if(music_stopped == 0):
                 mixer.music.unpause()
+                global pause
+                pause = FALSE
                 statusbar['text'] = "Music Resumed : " + \
                     os.path.basename(filename)
             else:
@@ -110,7 +133,6 @@ def play_music():
                     " " + os.path.basename(filename)
 
 # stop music
-
 
 def stop_music():
     try:
@@ -123,7 +145,7 @@ def stop_music():
         globals()['music_stopped'] = TRUE
         globals()['music_paused'] = FALSE
 
-
+pause = FALSE
 def pause_music():
     try:
         music_loaded
@@ -131,6 +153,8 @@ def pause_music():
         mb.showerror('', 'No Music File Found')
     else:
         globals()['paused'] = TRUE
+        global pause
+        pause = TRUE
         mixer.music.pause()
         statusbar['text'] = "Music Paused : " + os.path.basename(filename)
         globals()['music_stopped'] = FALSE
@@ -206,4 +230,9 @@ scale.grid(row=0, column=2, padx=30)
 statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
 statusbar.pack(side=BOTTOM, fill=X)
 
+def on_closing():
+    stop_music()
+    root.destroy()
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
