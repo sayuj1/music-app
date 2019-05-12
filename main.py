@@ -116,7 +116,6 @@ def start_count(t):
             time.sleep(1) #value is in second
             current_time = current_time+1
 
-
 #show details
 def show_details(play_song):
     filelabel['text'] = "Playing " + " - " + os.path.basename(play_song)  # printing loaded play_song
