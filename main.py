@@ -67,12 +67,12 @@ subMenu.add_command(label="About Us", command=about_us)
 # root.resizable(False, False)
 mixer.init()  # initializing the mixer
 
-# root.geometry('500x500')
+root.geometry('900x500')
 
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
 
-filelabel = ttk.Label(root, text='Listen Your Favorites Songs', font='Times 25 bold')
+filelabel = ttk.Label(root, text='Listen Your Favorites Songs', font='Times 20 bold')
 filelabel.pack()
 
 statusbar = ttk.Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W, font='Times 15 bold')

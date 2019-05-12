@@ -12,6 +12,8 @@ rope = "*"
 pygame = "*"
 mutagen = "*"
 ttkthemes = "*"
+cx-freeze = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.6"
