@@ -10,6 +10,7 @@ rope = "*"
 
 [packages]
 pygame = "*"
+mutagen = "*"
 
 [requires]
 python_version = "3.6"

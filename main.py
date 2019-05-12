@@ -2,6 +2,7 @@ import os
 from tkinter import *
 import tkinter.messagebox as mb
 import tkinter.filedialog as fs
+from mutagen.mp3 import MP3  #for getting metadata from the file bcz in pygame mixer it does not work for mp3 file due to large size
 from pygame import mixer
 
 root = Tk()
@@ -60,10 +61,16 @@ def set_vol(val):
 #show details
 def show_details():
     filelabel['text'] = "Playing " + " - " + os.path.basename(filename)  # printing loaded filename
-    print(filename)
-    a = mixer.Sound(filename)
-    total_length = a.get_length()
+    
+    file_data = os.path.splitext(filename)
 
+    if file_data[1] == '.mp3':
+        audio = MP3(filename)
+        total_length = audio.info.length
+    else:
+        a = mixer.Sound(filename)
+        total_length = a.get_length()
+    
     #divmod - total_length//60, total_length%60
     mins, secs = divmod(total_length, 60)
     mins = round(mins)
@@ -72,7 +79,6 @@ def show_details():
     lengthlabel['text'] = 'Total Length '+ timeformat
 
 def play_music():
-    #
     try:
         paused  # checking if pause variable is initialized or not
     except:
