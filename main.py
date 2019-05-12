@@ -43,8 +43,12 @@ mixer.init()  # initializing the mixer
 
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
-text = Label(root, text='Lets make some noise')
-text.pack(pady=10)
+filelabel = Label(root, text='Listen Your Favorites Songs')
+filelabel.pack(pady=10)
+
+lengthlabel = Label(root, text='Total Length  --:--')
+lengthlabel.pack(pady=10)
+
 
 # set volume
 
@@ -53,23 +57,36 @@ def set_vol(val):
     volume = int(val)/100
     mixer.music.set_volume(volume)
 
-# play music
+#show details
+def show_details():
+    filelabel['text'] = "Playing " + " - " + os.path.basename(filename)  # printing loaded filename
+    print(filename)
+    a = mixer.Sound(filename)
+    total_length = a.get_length()
 
+    #divmod - total_length//60, total_length%60
+    mins, secs = divmod(total_length, 60)
+    mins = round(mins)
+    secs = round(secs)
+    timeformat = '{:02d}:{:02d}'.format(mins, secs)
+    lengthlabel['text'] = 'Total Length '+ timeformat
 
 def play_music():
     #
     try:
-        paused  #checking if pause variable is initialized or not
+        paused  # checking if pause variable is initialized or not
     except:
         try:
             mixer.music.load(filename)
             mixer.music.play()
-            statusbar['text'] = "Playing Music : " + " " + os.path.basename(filename)  # printing loaded filename
+            statusbar['text'] = "Playing Music : " + " " + \
+                os.path.basename(filename)  # printing loaded filename
             globals()['music_loaded'] = TRUE
+            show_details()
 
         except:
             mb.showerror('No File', 'No File Choosen')
-    else: #this block will execute if try block executed successfully
+    else:  # this block will execute if try block executed successfully
         try:
             music_stopped
         except:
@@ -77,24 +94,29 @@ def play_music():
             statusbar['text'] = "Music Resumed : " + os.path.basename(filename)
         else:
             # print(music_stopped)
-            if(music_stopped==0):
+            if(music_stopped == 0):
                 mixer.music.unpause()
-                statusbar['text'] = "Music Resumed : " + os.path.basename(filename)
+                statusbar['text'] = "Music Resumed : " + \
+                    os.path.basename(filename)
             else:
                 mixer.music.play()
-                statusbar['text'] = "Playing Music : " + " " + os.path.basename(filename)
+                statusbar['text'] = "Playing Music : " + \
+                    " " + os.path.basename(filename)
 
 # stop music
+
+
 def stop_music():
     try:
         music_loaded
     except:
         mb.showerror('', 'No Music File Found')
     else:
-       mixer.music.stop()
-       statusbar['text'] = "Music Stopped : " + os.path.basename(filename)
-       globals()['music_stopped'] = TRUE
-       globals()['music_paused'] = FALSE
+        mixer.music.stop()
+        statusbar['text'] = "Music Stopped : " + os.path.basename(filename)
+        globals()['music_stopped'] = TRUE
+        globals()['music_paused'] = FALSE
+
 
 def pause_music():
     try:
@@ -107,44 +129,47 @@ def pause_music():
         statusbar['text'] = "Music Paused : " + os.path.basename(filename)
         globals()['music_stopped'] = FALSE
 
+
 def music_rewind():
     play_music()
     statusbar['text'] = "Music Restarted : " + os.path.basename(filename)
 
+
 muted = FALSE
+
 
 def mute_music():
     global muted
-    if muted:  #unmute the music
+    if muted:  # unmute the music
         mixer.music.set_volume(0)
         scale.set(20)
-        volumeBtn['image']=volume_photo
-        muted=FALSE
+        volumeBtn['image'] = volume_photo
+        muted = FALSE
         # volumeBtn.configure(image=mute_photo)
-    else:  #mute the music
+    else:  # mute the music
         mixer.music.set_volume(0)
         scale.set(0)
-        volumeBtn['image']=mute_photo
+        volumeBtn['image'] = mute_photo
         muted = TRUE
 
 
 #####################################################middle frame containing buttons ##############################################################
-mframe = Frame(root, relief = RAISED)
+mframe = Frame(root, relief=RAISED)
 mframe.pack(padx=30, pady=30)
 
 # play button
 play_photo = PhotoImage(file='images/play.png')
 playBtn = Button(mframe, image=play_photo, command=play_music)
-playBtn.grid(row=0, column=0, padx=10)              #pack(side=LEFT, padx=10)
+playBtn.grid(row=0, column=0, padx=10)  # pack(side=LEFT, padx=10)
 
 # stop button
 stop_photo = PhotoImage(file='images/stop.png')
 stopBtn = Button(mframe, image=stop_photo, command=stop_music)
 stopBtn.grid(row=0, column=2, padx=10)
 
-#pause button
+# pause button
 pause_photo = PhotoImage(file='images/pause.png')
-pauseBtn = Button(mframe, image=pause_photo, command = pause_music)
+pauseBtn = Button(mframe, image=pause_photo, command=pause_music)
 pauseBtn.grid(row=0, column=1, padx=10)
 
 ################################## Middle Frame End ##################################
@@ -153,22 +178,22 @@ pauseBtn.grid(row=0, column=1, padx=10)
 bottomFrame = Frame(root)
 bottomFrame.pack(pady=15)
 
-#rewind button
+# rewind button
 rewind_photo = PhotoImage(file='images/previous.png')
-rewindBtn = Button(bottomFrame, image=rewind_photo, command = music_rewind)
-rewindBtn.grid(row = 0, column = 0)
+rewindBtn = Button(bottomFrame, image=rewind_photo, command=music_rewind)
+rewindBtn.grid(row=0, column=0)
 
 volume_photo = PhotoImage(file='images/volume.png')
 mute_photo = PhotoImage(file='images/mute.png')
-volumeBtn = Button(bottomFrame, image=volume_photo, command = mute_music)
-volumeBtn.grid(row = 0, column = 1)
+volumeBtn = Button(bottomFrame, image=volume_photo, command=mute_music)
+volumeBtn.grid(row=0, column=1)
 
 
 # volume Control
 scale = Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
-scale.set(20)  #setting default value of the scale
+scale.set(20)  # setting default value of the scale
 mixer.music.set_volume(0.2)  # setting default volume
-scale.grid(row = 0, column = 2, padx=30)
+scale.grid(row=0, column=2, padx=30)
 
 ################################## Bottom Frame End ##################################
 
