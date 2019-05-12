@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 import tkinter.messagebox as mb
 import tkinter.filedialog as fs
@@ -58,6 +59,7 @@ def play_music():
     try:
         mixer.music.load(filename)
         mixer.music.play()
+        statusbar['text'] = "Playing Music : "+ " "+ os.path.basename(filename)
 
     except:
         mb.showerror('No File', 'No File Choosen')
@@ -67,6 +69,7 @@ def play_music():
 
 def stop_music():
     mixer.music.stop()
+    statusbar['text'] = "Music Stopped"
 
 
 # play button
@@ -84,5 +87,8 @@ scale = Scale(root, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
 scale.set(20)
 mixer.music.set_volume(0.2)  # setting default volume
 scale.pack()
+
+statusbar = Label(root, text='Welcome to Music App', relief = SUNKEN, anchor=W)
+statusbar.pack(side = BOTTOM, fill = X)
 
 root.mainloop()
