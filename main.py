@@ -131,6 +131,7 @@ def play_music():
                 mixer.music.play()
                 statusbar['text'] = "Playing Music : " + \
                     " " + os.path.basename(filename)
+                show_details()
 
 # stop music
 
@@ -230,9 +231,9 @@ scale.grid(row=0, column=2, padx=30)
 statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
 statusbar.pack(side=BOTTOM, fill=X)
 
-def on_closing():
-    stop_music()
+def on_closing():    
+    mixer.music.stop() #for stopping music before exiting to avoid the main thread error
     root.destroy()
-
+    
 root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
