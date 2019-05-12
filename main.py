@@ -1,5 +1,6 @@
 import os
 from tkinter import *
+from tkinter import ttk  #for theme widgets
 import tkinter.messagebox as mb
 import tkinter.filedialog as fs
 from mutagen.mp3 import MP3  #for getting metadata from the file bcz in pygame mixer it does not work for mp3 file due to large size
@@ -31,11 +32,14 @@ def open_file():
 
 def add_to_playList(filename):
     #Songs playlist
-    filename=os.path.basename(filename)
-    index = 0
-    playListBox.insert(index, filename)
-    playList.insert(index, filename_path)
-    index+=1
+    if(filename == ''):
+        statusbar['text'] = os.path.basename(filename_path) + "No File Choosen"
+    else:
+        filename=os.path.basename(filename)
+        index = 0
+        playListBox.insert(index, filename)
+        playList.insert(index, filename_path)
+        index+=1
 
 
 def about_us():
@@ -64,10 +68,10 @@ mixer.init()  # initializing the mixer
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
 
-filelabel = Label(root, text='Listen Your Favorites Songs')
+filelabel = ttk.Label(root, text='Listen Your Favorites Songs', font='Times 25 bold')
 filelabel.pack()
 
-statusbar = Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W)
+statusbar = ttk.Label(root, text='Welcome to Music App', relief=SUNKEN, anchor=W, font='Times 15 bold')
 statusbar.pack(side=BOTTOM, fill=X)
 
 ############################Left Frame ####################################
@@ -77,7 +81,7 @@ leftFrame.pack(side=LEFT,padx=30)
 playListBox = Listbox(leftFrame)
 playListBox.pack()
 
-addBtn = Button(leftFrame, text="+ Add", command=open_file)
+addBtn = ttk.Button(leftFrame, text="+ Add", command=open_file)
 addBtn.pack(side=LEFT)
 
 def del_song():
@@ -86,7 +90,7 @@ def del_song():
     playListBox.delete(selectedSong)
     playList.remove(selectedSong)
 
-delBtn = Button(leftFrame, text="- Delete", command = del_song)
+delBtn = ttk.Button(leftFrame, text="- Delete", command = del_song)
 delBtn.pack(side=LEFT)
 
 ##########################################################################
@@ -95,16 +99,16 @@ delBtn.pack(side=LEFT)
 rightFrame = Frame(root)
 rightFrame.pack()
 
-lengthlabel = Label(rightFrame, text='Total Length  --:--')
+lengthlabel = ttk.Label(rightFrame, text='Total Length  --:--')
 lengthlabel.pack(pady=5)
 
-Currentlabel = Label(rightFrame, text='Current Length  --:--', relief = GROOVE)
+Currentlabel = ttk.Label(rightFrame, text='Current Length  --:--', relief = GROOVE)
 Currentlabel.pack()
 
 
 # set volume
 def set_vol(val):
-    volume = int(val)/100
+    volume = float(val)/100
     mixer.music.set_volume(volume)
 
 def start_count(t):
@@ -245,17 +249,17 @@ mframe.pack(padx=30, pady=30)
 
 # play button
 play_photo = PhotoImage(file='images/play.png')
-playBtn = Button(mframe, image=play_photo, command=play_music)
+playBtn = ttk.Button(mframe, image=play_photo, command=play_music)
 playBtn.grid(row=0, column=0, padx=10)  # pack(side=LEFT, padx=10)
 
 # stop button
 stop_photo = PhotoImage(file='images/stop.png')
-stopBtn = Button(mframe, image=stop_photo, command=stop_music)
+stopBtn = ttk.Button(mframe, image=stop_photo, command=stop_music)
 stopBtn.grid(row=0, column=2, padx=10)
 
 # pause button
 pause_photo = PhotoImage(file='images/pause.png')
-pauseBtn = Button(mframe, image=pause_photo, command=pause_music)
+pauseBtn = ttk.Button(mframe, image=pause_photo, command=pause_music)
 pauseBtn.grid(row=0, column=1, padx=10)
 
 ################################## Middle Frame End ##################################
@@ -266,17 +270,17 @@ bottomFrame.pack(pady=15)
 
 # rewind button
 rewind_photo = PhotoImage(file='images/previous.png')
-rewindBtn = Button(bottomFrame, image=rewind_photo, command=music_rewind)
+rewindBtn = ttk.Button(bottomFrame, image=rewind_photo, command=music_rewind)
 rewindBtn.grid(row=0, column=0)
 
 volume_photo = PhotoImage(file='images/volume.png')
 mute_photo = PhotoImage(file='images/mute.png')
-volumeBtn = Button(bottomFrame, image=volume_photo, command=mute_music)
+volumeBtn = ttk.Button(bottomFrame, image=volume_photo, command=mute_music)
 volumeBtn.grid(row=0, column=1)
 
 
 # volume Control
-scale = Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
+scale = ttk.Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
 scale.set(20)  # setting default value of the scale
 mixer.music.set_volume(0.2)  # setting default volume
 scale.grid(row=0, column=2, padx=30)
