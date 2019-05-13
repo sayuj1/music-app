@@ -50,6 +50,9 @@ def about_us():
     mb.showinfo('About Melody',
                 'The is the music listening app created by Sayuj')
 
+def quit_w():
+    mixer.music.stop()
+    root.destroy()
 
 
 # create the submenu
@@ -58,7 +61,7 @@ subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="File", menu=subMenu)
 subMenu.add_command(label="Open", command=open_file)
 subMenu.add_separator()
-subMenu.add_command(label="Exit", command=root.destroy)
+subMenu.add_command(label="Exit", command=quit_w)
 
 subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="Help", menu=subMenu)
@@ -300,6 +303,7 @@ def on_closing():
     root.destroy()
     
 root.protocol("WM_DELETE_WINDOW", on_closing)
+
 
 ################################## Keyboard shortcuts ##################################
 def stop(self):
