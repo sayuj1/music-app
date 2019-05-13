@@ -62,14 +62,14 @@ subMenu.add_command(label="Exit", command=root.destroy)
 
 subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="Help", menu=subMenu)
-subMenu.add_command(label="About Us", command=about_us)
+subMenu.add_command(label="About This", command=about_us)
 
 root.resizable(False, False)
 mixer.init()  # initializing the mixer
 
 root.geometry('1000x500')
 
-root.title('Melody')
+root.title('Love Music')
 root.iconbitmap(r'melody.ico')
 
 filelabel = ttk.Label(root, text='Listen Your Favorites Songs', font='Times 20 bold')
@@ -175,7 +175,7 @@ def play_music():
             show_details(playSong)
 
         except:
-            mb.showerror('No File', 'No File Choosen')
+            mb.showerror('No File', 'Please Choose a Music to Play')
     else:  # this block will execute if try block executed successfully
         try:
             music_stopped
@@ -232,15 +232,20 @@ def music_rewind():
 
 
 muted = FALSE
+prev_vol_val = None
 def mute_music():
     global muted
+    global prev_vol_val
     if muted:  # unmute the music
-        mixer.music.set_volume(0)
-        scale.set(20)
+        current_vol = prev_vol_val
+        current_vol*= 100
+        set_vol(current_vol)
+        scale.set(current_vol)
         volumeBtn['image'] = volume_photo
         muted = FALSE
         # volumeBtn.configure(image=mute_photo)
     else:  # mute the music
+        prev_vol_val = mixer.music.get_volume()
         mixer.music.set_volume(0)
         scale.set(0)
         volumeBtn['image'] = mute_photo
@@ -281,12 +286,11 @@ volume_photo = PhotoImage(file='images/volume.png')
 mute_photo = PhotoImage(file='images/mute.png')
 volumeBtn = ttk.Button(bottomFrame, image=volume_photo, command=mute_music)
 volumeBtn.grid(row=0, column=1)
-
-
+    
 # volume Control
 scale = ttk.Scale(bottomFrame, from_=0, to=100, orient=HORIZONTAL, command=set_vol)
-scale.set(20)  # setting default value of the scale
-mixer.music.set_volume(0.2)  # setting default volume
+scale.set(40)  # setting default value of the scale
+mixer.music.set_volume(0.4)  # setting default volume
 scale.grid(row=0, column=2, padx=30)
 
 ################################## Bottom Frame End ##################################
@@ -311,10 +315,44 @@ def quit_w(self):
     mixer.music.stop()
     root.destroy()
 
+def browse_file(self):
+    open_file()
+
+def delete_file(self):
+    del_song()
+
+def mute_m(self):
+    mute_music()
+
+def rewind_m(self):
+    music_rewind()
+
+def increase_s(self):
+    # print(mixer.music.get_volume())
+    current_vol = mixer.music.get_volume() + 1/100
+    current_vol*= 100
+    set_vol(current_vol)
+    scale.set(current_vol)
+
+def decrease_s(self):
+    # print(mixer.music.get_volume())
+    current_vol = mixer.music.get_volume() - 1/100
+    current_vol*= 100
+    set_vol(current_vol)
+    scale.set(current_vol)
+
 root.bind_all('<s>', stop)
 root.bind_all('<p>', pause_m)
 root.bind_all('<w>', play)
 root.bind_all('<q>', quit_w)
+root.bind_all('<m>', mute_m)
+root.bind_all('<r>', rewind_m)
+root.bind_all('<a>', browse_file)
+root.bind_all('<d>', delete_file)
+root.bind_all('<Control-o>', browse_file)
+root.bind_all('<Shift-greater>', increase_s)
+root.bind_all('<Shift-less>', decrease_s)
+
 
 ################################## Keyboard shortcuts End ##################################
 
