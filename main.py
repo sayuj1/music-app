@@ -18,10 +18,6 @@ root.set_theme('radiance')
 # Left Frame = ListBox(Playlist)
 # Right Frame = total_time, current_time, play,stop,pause buttons, volume slider, mute, restart button
 
-# create the menubar
-menubar = Menu(root)
-root.config(menu=menubar)
-
 # playList --> fullpath + filename 
 # playListBox --> filename
 
@@ -33,26 +29,122 @@ def open_file():
     statusbar['text'] = os.path.basename(filename_path) + " Loaded"
     add_to_playList(filename_path)
     # print(filename_path)
-
+index = 0
 def add_to_playList(filename):
     #Songs playlist
+    global index
     if(filename == ''):
         statusbar['text'] = os.path.basename(filename_path) + "No File Choosen"
     else:
         filename=os.path.basename(filename)
-        index = 0
         playListBox.insert(index, filename)
         playList.insert(index, filename_path)
-        index+=1
+        globals()['index']+=1
 
 
 def about_us():
     mb.showinfo('About Melody',
                 'The is the music listening app created by Sayuj')
 
-def quit_w():
+############################Keyboard shortcuts documentation ###################################################################################
+def shortcuts():
+    root1 = tk.ThemedTk()  #creating theme widget object
+    root1.get_themes()
+    root1.set_theme('radiance')
+    root1.title('Keyboard Shortcuts')
+    root1.geometry('500x850')
+    mainFrame = Frame(root1)
+    mainFrame.pack(pady=30)
+    
+    key_title = Label(mainFrame, text='Keys', relief=GROOVE ,font='Times 15 bold',width=20)
+    key_title.grid(row=0,column=0,ipady=15)
+    
+    short_title = Label(mainFrame, text='Shortcuts', relief=GROOVE, font='Times 15 bold',width=20)
+    short_title.grid(row=0,column=2,ipady=15)
+    
+    key1 = Label(mainFrame, text='Space Bar', relief=GROOVE ,font='Times 15 bold',width=20)
+    key1.grid(row=1,column=0,ipady=15)
+
+    short1 = Label(mainFrame, text='Play Music', relief=GROOVE, font='Times 15 bold',width=20)
+    short1.grid(row=1,column=2,ipady=15)
+
+    key2 = Label(mainFrame, text='p', relief=GROOVE ,font='Times 15 bold',width=20)
+    key2.grid(row=2,column=0,ipady=15)
+
+    short2 = Label(mainFrame, text='Pause Music', relief=GROOVE, font='Times 15 bold',width=20)
+    short2.grid(row=2,column=2,ipady=15)
+    
+    key3 = Label(mainFrame, text='s', relief=GROOVE ,font='Times 15 bold',width=20)
+    key3.grid(row=3,column=0,ipady=15)
+
+    short3 = Label(mainFrame, text='Stop Music', relief=GROOVE, font='Times 15 bold',width=20)
+    short3.grid(row=3,column=2,ipady=15)
+
+    
+    key4 = Label(mainFrame, text='Ctrl+O / a', relief=GROOVE ,font='Times 15 bold',width=20)
+    key4.grid(row=4,column=0,ipady=15)
+
+    short4 = Label(mainFrame, text='Load Music File', relief=GROOVE, font='Times 15 bold',width=20)
+    short4.grid(row=4,column=2,ipady=15)
+
+    key5 = Label(mainFrame, text='d', relief=GROOVE ,font='Times 15 bold',width=20)
+    key5.grid(row=5,column=0,ipady=15)
+
+    short5 = Label(mainFrame, text='Delete Music File', relief=GROOVE, font='Times 15 bold',width=20)
+    short5.grid(row=5,column=2,ipady=15)
+
+    key6 = Label(mainFrame, text='m', relief=GROOVE ,font='Times 15 bold',width=20)
+    key6.grid(row=6,column=0,ipady=15)
+
+    short6 = Label(mainFrame, text='mute/unmute music', relief=GROOVE, font='Times 15 bold',width=20)
+    short6.grid(row=6,column=2,ipady=15)
+    
+    key7 = Label(mainFrame, text='r', relief=GROOVE ,font='Times 15 bold',width=20)
+    key7.grid(row=7,column=0,ipady=15)
+
+    short7 = Label(mainFrame, text='Restart Music', relief=GROOVE, font='Times 15 bold',width=20)
+    short7.grid(row=7,column=2,ipady=15)
+    
+    key8 = Label(mainFrame, text='i', relief=GROOVE ,font='Times 15 bold',width=20)
+    key8.grid(row=8,column=0,ipady=15)
+
+    short8 = Label(mainFrame, text='Info About This Music Player', relief=GROOVE, font='Times 15 bold',width=20)
+    short8.grid(row=8,column=2,ipady=15)
+    
+    key9 = Label(mainFrame, text='Shift + >', relief=GROOVE ,font='Times 15 bold',width=20)
+    key9.grid(row=9,column=0,ipady=15)
+
+    short9 = Label(mainFrame, text='Increase Volume', relief=GROOVE, font='Times 15 bold',width=20)
+    short9.grid(row=9,column=2,ipady=15)
+
+    key10 = Label(mainFrame, text='Shift + <', relief=GROOVE ,font='Times 15 bold',width=20)
+    key10.grid(row=10,column=0,ipady=15)
+
+    short10 = Label(mainFrame, text='Decrease Volume', relief=GROOVE, font='Times 15 bold',width=20)
+    short10.grid(row=10,column=2,ipady=15)
+    
+    key11 = Label(mainFrame, text='k', relief=GROOVE ,font='Times 15 bold',width=20)
+    key11.grid(row=11,column=0,ipady=15)
+
+    short11 = Label(mainFrame, text='Music Player Shortcuts', relief=GROOVE, font='Times 15 bold',width=20)
+    short11.grid(row=11,column=2,ipady=15)
+
+    key12 = Label(mainFrame, text='q', relief=GROOVE ,font='Times 15 bold',width=20)
+    key12.grid(row=12,column=0,ipady=15)
+
+    short12 = Label(mainFrame, text='Close Music Player', relief=GROOVE, font='Times 15 bold',width=20)
+    short12.grid(row=12,column=2,ipady=15)
+
+    root1.mainloop()
+    
+
+def exit_w():
     mixer.music.stop()
     root.destroy()
+
+# create the menubar
+menubar = Menu(root)
+root.config(menu=menubar)
 
 
 # create the submenu
@@ -61,11 +153,12 @@ subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="File", menu=subMenu)
 subMenu.add_command(label="Open", command=open_file)
 subMenu.add_separator()
-subMenu.add_command(label="Exit", command=quit_w)
+subMenu.add_command(label="Exit", command=exit_w)
 
 subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="Help", menu=subMenu)
 subMenu.add_command(label="About This", command=about_us)
+subMenu.add_command(label="Keyboard Shortcuts", command=shortcuts)
 
 root.resizable(False, False)
 mixer.init()  # initializing the mixer
@@ -96,6 +189,7 @@ def del_song():
     selectedSong = int(selectedSong[0])
     playListBox.delete(selectedSong)
     playList.remove(selectedSong)
+    globals()['index']-=1
 
 delBtn = ttk.Button(leftFrame, text="- Delete", command = del_song)
 delBtn.pack(side=LEFT)
@@ -345,14 +439,22 @@ def decrease_s(self):
     set_vol(current_vol)
     scale.set(current_vol)
 
+def key_short(self):
+    shortcuts()
+
+def info_music_player(self):
+    about_us()
+
 root.bind_all('<s>', stop)
 root.bind_all('<p>', pause_m)
-root.bind_all('<w>', play)
+root.bind_all('<space>', play)
 root.bind_all('<q>', quit_w)
 root.bind_all('<m>', mute_m)
 root.bind_all('<r>', rewind_m)
 root.bind_all('<a>', browse_file)
 root.bind_all('<d>', delete_file)
+root.bind_all('<k>', key_short)
+root.bind_all('<i>', info_music_player)
 root.bind_all('<Control-o>', browse_file)
 root.bind_all('<Shift-greater>', increase_s)
 root.bind_all('<Shift-less>', decrease_s)
