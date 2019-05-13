@@ -297,6 +297,7 @@ def on_closing():
     
 root.protocol("WM_DELETE_WINDOW", on_closing)
 
+################################## Keyboard shortcuts ##################################
 def stop(self):
     stop_music()
 
@@ -314,5 +315,7 @@ root.bind_all('<s>', stop)
 root.bind_all('<p>', pause_m)
 root.bind_all('<w>', play)
 root.bind_all('<q>', quit_w)
+
+################################## Keyboard shortcuts End ##################################
 
 root.mainloop()
