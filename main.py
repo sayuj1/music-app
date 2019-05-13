@@ -64,10 +64,10 @@ subMenu = Menu(menubar, tearoff=0)  # tearoff --> remove the dashed line
 menubar.add_cascade(label="Help", menu=subMenu)
 subMenu.add_command(label="About Us", command=about_us)
 
-# root.resizable(False, False)
+root.resizable(False, False)
 mixer.init()  # initializing the mixer
 
-root.geometry('900x500')
+root.geometry('1000x500')
 
 root.title('Melody')
 root.iconbitmap(r'melody.ico')
@@ -83,7 +83,7 @@ leftFrame = Frame(root)
 leftFrame.pack(side=LEFT,padx=30, pady=30)
 
 playListBox = Listbox(leftFrame)
-playListBox.pack()
+playListBox.pack(ipadx=150)
 
 addBtn = ttk.Button(leftFrame, text="+ Add", command=open_file)
 addBtn.pack(side=LEFT)
@@ -296,4 +296,23 @@ def on_closing():
     root.destroy()
     
 root.protocol("WM_DELETE_WINDOW", on_closing)
+
+def stop(self):
+    stop_music()
+
+def pause_m(self):
+    pause_music()
+
+def play(self):
+    play_music()
+
+def quit_w(self):
+    mixer.music.stop()
+    root.destroy()
+
+root.bind_all('<s>', stop)
+root.bind_all('<p>', pause_m)
+root.bind_all('<w>', play)
+root.bind_all('<q>', quit_w)
+
 root.mainloop()
