@@ -1,3 +1,4 @@
+##need to fix playlist error wrong music is playing
 import os
 from tkinter import *
 from tkinter import ttk  #for theme widgets
@@ -186,7 +187,6 @@ addBtn.pack(side=LEFT)
 
 def del_song():
     selectedSong = playListBox.curselection() #getting selected song from the listBox
-    selectedSong = int(selectedSong[0])
     playListBox.delete(selectedSong)
     playList.remove(selectedSong)
     globals()['index']-=1
@@ -349,7 +349,7 @@ def mute_music():
         muted = TRUE
 
 
-#####################################################middle frame containing buttons ##############################################################
+##################################################### middle frame containing buttons ##############################################################
 mframe = Frame(rightFrame, relief=RAISED)
 mframe.pack(padx=30, pady=30)
 
